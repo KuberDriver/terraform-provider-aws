@@ -51,6 +51,11 @@ resource "aws_s3_bucket" "b" {
 EOF
   }
 }
+
+resource "aws_s3_bucket_policy" "b" {
+  bucket = aws_s3_bucket.b.id
+  policy = file("policy.json")
+}
 ```
 
 ### Using CORS
