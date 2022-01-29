@@ -86,22 +86,8 @@ resource "aws_s3_bucket" "b" {
 
 ### Enable Logging
 
-```terraform
-resource "aws_s3_bucket" "log_bucket" {
-  bucket = "my-tf-log-bucket"
-  acl    = "log-delivery-write"
-}
-
-resource "aws_s3_bucket" "b" {
-  bucket = "my-tf-test-bucket"
-  acl    = "private"
-
-  logging {
-    target_bucket = aws_s3_bucket.log_bucket.id
-    target_prefix = "log/"
-  }
-}
-```
+The `logging` argument is read-only as of version 4.0.
+See the [`aws_s3_bucket_logging` resource](s3_bucket_logging.html.markdown) for configuration details.
 
 ### Using object lifecycle
 
@@ -362,7 +348,6 @@ The following arguments are supported:
 * `website` - (Optional) A website object (documented below).
 * `cors_rule` - (Optional) A rule of [Cross-Origin Resource Sharing](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html) (documented below).
 * `versioning` - (Optional) A state of [versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) (documented below)
-* `logging` - (Optional) A settings of [bucket logging](https://docs.aws.amazon.com/AmazonS3/latest/UG/ManagingBucketLogging.html) (documented below).
 * `lifecycle_rule` - (Optional) A configuration of [object lifecycle management](http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html) (documented below).
 * `acceleration_status` - (Optional) Sets the accelerate configuration of an existing bucket. Can be `Enabled` or `Suspended`.
 * `request_payer` - (Optional) Specifies who should bear the cost of Amazon S3 data transfer.
@@ -395,11 +380,6 @@ The `versioning` object supports the following:
 
 * `enabled` - (Optional) Enable versioning. Once you version-enable a bucket, it can never return to an unversioned state. You can, however, suspend versioning on that bucket.
 * `mfa_delete` - (Optional) Enable MFA delete for either `Change the versioning state of your bucket` or `Permanently delete an object version`. Default is `false`. This cannot be used to toggle this setting but is available to allow managed buckets to reflect the state in AWS
-
-The `logging` object supports the following:
-
-* `target_bucket` - (Required) The name of the bucket that will receive the log objects.
-* `target_prefix` - (Optional) To specify a key prefix for log objects.
 
 The `lifecycle_rule` object supports the following:
 
@@ -559,6 +539,9 @@ In addition to all arguments above, the following attributes are exported:
 * `bucket_domain_name` - The bucket domain name. Will be of format `bucketname.s3.amazonaws.com`.
 * `bucket_regional_domain_name` - The bucket region-specific domain name. The bucket domain name including the region name, please refer [here](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent [redirect issues](https://forums.aws.amazon.com/thread.jspa?threadID=216814) from CloudFront to S3 Origin URL.
 * `hosted_zone_id` - The [Route 53 Hosted Zone ID](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_website_region_endpoints) for this bucket's region.
+* `logging` - The [logging parameters](https://docs.aws.amazon.com/AmazonS3/latest/UG/ManagingBucketLogging.html) for the bucket.
+    * `target_bucket` - The name of the bucket that receives the log objects.
+    * `target_prefix` - The prefix for all log object keys/
 * `region` - The AWS region this bucket resides in.
 * `tags_all` - A map of tags assigned to the resource, including those inherited from the provider [`default_tags` configuration block](/docs/providers/aws/index.html#default_tags-configuration-block).
 * `website_endpoint` - The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.
