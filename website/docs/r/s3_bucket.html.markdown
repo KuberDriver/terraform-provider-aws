@@ -105,76 +105,8 @@ resource "aws_s3_bucket" "b" {
 
 ### Using object lifecycle
 
-```terraform
-resource "aws_s3_bucket" "bucket" {
-  bucket = "my-bucket"
-  acl    = "private"
-
-  lifecycle_rule {
-    id      = "log"
-    enabled = true
-
-    prefix = "log/"
-
-    tags = {
-      rule      = "log"
-      autoclean = "true"
-    }
-
-    transition {
-      days          = 30
-      storage_class = "STANDARD_IA" # or "ONEZONE_IA"
-    }
-
-    transition {
-      days          = 60
-      storage_class = "GLACIER"
-    }
-
-    expiration {
-      days = 90
-    }
-  }
-
-  lifecycle_rule {
-    id      = "tmp"
-    prefix  = "tmp/"
-    enabled = true
-
-    expiration {
-      date = "2016-01-12"
-    }
-  }
-}
-
-resource "aws_s3_bucket" "versioning_bucket" {
-  bucket = "my-versioning-bucket"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-
-  lifecycle_rule {
-    prefix  = "config/"
-    enabled = true
-
-    noncurrent_version_transition {
-      days          = 30
-      storage_class = "STANDARD_IA"
-    }
-
-    noncurrent_version_transition {
-      days          = 60
-      storage_class = "GLACIER"
-    }
-
-    noncurrent_version_expiration {
-      days = 90
-    }
-  }
-}
-```
+The `lifecycle_rule` argument is read-only as of version 4.0.
+See the [`aws_s3_bucket_lifecycle_configuration` resource](s3_bucket_lifecycle_configuration.html.markdown) for configuration details.
 
 ### Using replication configuration
 
@@ -363,7 +295,6 @@ The following arguments are supported:
 * `cors_rule` - (Optional) A rule of [Cross-Origin Resource Sharing](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html) (documented below).
 * `versioning` - (Optional) A state of [versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) (documented below)
 * `logging` - (Optional) A settings of [bucket logging](https://docs.aws.amazon.com/AmazonS3/latest/UG/ManagingBucketLogging.html) (documented below).
-* `lifecycle_rule` - (Optional) A configuration of [object lifecycle management](http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html) (documented below).
 * `acceleration_status` - (Optional) Sets the accelerate configuration of an existing bucket. Can be `Enabled` or `Suspended`.
 * `request_payer` - (Optional) Specifies who should bear the cost of Amazon S3 data transfer.
 Can be either `BucketOwner` or `Requester`. By default, the owner of the S3 bucket would incur
@@ -400,41 +331,6 @@ The `logging` object supports the following:
 
 * `target_bucket` - (Required) The name of the bucket that will receive the log objects.
 * `target_prefix` - (Optional) To specify a key prefix for log objects.
-
-The `lifecycle_rule` object supports the following:
-
-* `id` - (Optional) Unique identifier for the rule. Must be less than or equal to 255 characters in length.
-* `prefix` - (Optional) Object key prefix identifying one or more objects to which the rule applies.
-* `tags` - (Optional) Specifies object tags key and value.
-* `enabled` - (Required) Specifies lifecycle rule status.
-* `abort_incomplete_multipart_upload_days` (Optional) Specifies the number of days after initiating a multipart upload when the multipart upload must be completed.
-* `expiration` - (Optional) Specifies a period in the object's expire (documented below).
-* `transition` - (Optional) Specifies a period in the object's transitions (documented below).
-* `noncurrent_version_expiration` - (Optional) Specifies when noncurrent object versions expire (documented below).
-* `noncurrent_version_transition` - (Optional) Specifies when noncurrent object versions transitions (documented below).
-
-At least one of `abort_incomplete_multipart_upload_days`, `expiration`, `transition`, `noncurrent_version_expiration`, `noncurrent_version_transition` must be specified.
-
-The `expiration` object supports the following
-
-* `date` (Optional) Specifies the date after which you want the corresponding action to take effect.
-* `days` (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
-* `expired_object_delete_marker` (Optional) On a versioned bucket (versioning-enabled or versioning-suspended bucket), you can add this element in the lifecycle configuration to direct Amazon S3 to delete expired object delete markers. This cannot be specified with Days or Date in a Lifecycle Expiration Policy.
-
-The `transition` object supports the following
-
-* `date` (Optional) Specifies the date after which you want the corresponding action to take effect.
-* `days` (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
-* `storage_class` (Required) Specifies the Amazon S3 [storage class](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Transition.html#AmazonS3-Type-Transition-StorageClass) to which you want the object to transition.
-
-The `noncurrent_version_expiration` object supports the following
-
-* `days` (Required) Specifies the number of days noncurrent object versions expire.
-
-The `noncurrent_version_transition` object supports the following
-
-* `days` (Required) Specifies the number of days noncurrent object versions transition.
-* `storage_class` (Required) Specifies the Amazon S3 [storage class](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Transition.html#AmazonS3-Type-Transition-StorageClass) to which you want the object to transition.
 
 The `replication_configuration` object supports the following:
 
@@ -559,6 +455,25 @@ In addition to all arguments above, the following attributes are exported:
 * `bucket_domain_name` - The bucket domain name. Will be of format `bucketname.s3.amazonaws.com`.
 * `bucket_regional_domain_name` - The bucket region-specific domain name. The bucket domain name including the region name, please refer [here](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent [redirect issues](https://forums.aws.amazon.com/thread.jspa?threadID=216814) from CloudFront to S3 Origin URL.
 * `hosted_zone_id` - The [Route 53 Hosted Zone ID](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_website_region_endpoints) for this bucket's region.
+* `lifecycle_rule` - A configuration of [object lifecycle management](http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html).
+    * `id` - Unique identifier for the rule.
+    * `prefix` - Object key prefix identifying one or more objects to which the rule applies.
+    * `tags` - Object tags key and value.
+    * `enabled` - Lifecycle rule status.
+    * `abort_incomplete_multipart_upload_days` - Number of days after initiating a multipart upload when the multipart upload must be completed.
+    * `expiration` - The expiration for the lifecycle of the object in the form of date, days and, whether the object has a delete marker.
+        * `date` - Indicates at what date the object is to be moved or deleted.
+        * `days` - Indicates the lifetime, in days, of the objects that are subject to the rule. The value must be a non-zero positive integer.
+        * `expired_object_delete_marker` - Indicates whether Amazon S3 will remove a delete marker with no noncurrent versions.
+    * `transition` - Specifies when an Amazon S3 object transitions to a specified storage class.
+        * `date` - The date after which you want the corresponding action to take effect.
+        * `days` - The number of days after object creation when the specific rule action takes effect.
+        * `storage_class` - The Amazon S3 [storage class](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Transition.html#AmazonS3-Type-Transition-StorageClass) an object will transition to.
+    * `noncurrent_version_expiration` - When noncurrent object versions expire.
+        * `days` - The number of days noncurrent object versions expire.
+    * `noncurrent_version_transition` - When noncurrent object versions transition.
+        * `days` - The number of days noncurrent object versions transition.
+        * `storage_class` - The Amazon S3 [storage class](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Transition.html#AmazonS3-Type-Transition-StorageClass) an object will transition to.
 * `region` - The AWS region this bucket resides in.
 * `tags_all` - A map of tags assigned to the resource, including those inherited from the provider [`default_tags` configuration block](/docs/providers/aws/index.html#default_tags-configuration-block).
 * `website_endpoint` - The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.
