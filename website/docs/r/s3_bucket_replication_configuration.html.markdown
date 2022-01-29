@@ -93,9 +93,12 @@ resource "aws_iam_role_policy_attachment" "replication" {
 
 resource "aws_s3_bucket" "destination" {
   bucket = "tf-test-bucket-destination-12345"
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_versioning" "destination" {
+  bucket = aws_s3_bucket.destination.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
@@ -104,10 +107,6 @@ resource "aws_s3_bucket" "source" {
   bucket   = "tf-test-bucket-source-12345"
   acl      = "private"
 
-  versioning {
-    enabled = true
-  }
-
   lifecycle {
     ignore_changes = [
       replication_configuration
@@ -115,7 +114,19 @@ resource "aws_s3_bucket" "source" {
   }
 }
 
+resource "aws_s3_bucket_versioning" "source" {
+  provider = aws.central
+
+  bucket = aws_s3_bucket.source.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_replication_configuration" "replication" {
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.source]
+
   role   = aws_iam_role.replication.arn
   bucket = aws_s3_bucket.source.id
 
@@ -140,14 +151,17 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
 resource "aws_s3_bucket" "east" {
   bucket = "tf-test-bucket-east-12345"
 
-  versioning {
-    enabled = true
-  }
-
   lifecycle {
     ignore_changes = [
       replication_configuration
     ]
+  }
+}
+
+resource "aws_s3_bucket_versioning" "east" {
+  bucket = aws_s3_bucket.east.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
@@ -155,10 +169,6 @@ resource "aws_s3_bucket" "west" {
   provider = west
   bucket   = "tf-test-bucket-west-12345"
 
-  versioning {
-    enabled = true
-  }
-
   lifecycle {
     ignore_changes = [
       replication_configuration
@@ -166,7 +176,19 @@ resource "aws_s3_bucket" "west" {
   }
 }
 
+resource "aws_s3_bucket_versioning" "west" {
+  provider = west
+
+  bucket = aws_s3_bucket.west.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_replication_configuration" "east_to_west" {
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.east]
+
   role   = aws_iam_role.east_replication.arn
   bucket = aws_s3_bucket.east.id
 
@@ -183,6 +205,9 @@ resource "aws_s3_bucket_replication_configuration" "east_to_west" {
 }
 
 resource "aws_s3_bucket_replication_configuration" "west_to_east" {
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.west]
+
   role   = aws_iam_role.west_replication.arn
   bucket = aws_s3_bucket.west.id
 

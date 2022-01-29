@@ -73,16 +73,8 @@ resource "aws_s3_bucket" "b" {
 
 ### Using versioning
 
-```terraform
-resource "aws_s3_bucket" "b" {
-  bucket = "my-tf-test-bucket"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-}
-```
+The `versioning` argument is read-only as of version 4.0.
+See the [`aws_s3_bucket_versioning` resource](s3_bucket_versioning.html.markdown) for configuration details.
 
 ### Enable Logging
 
@@ -151,10 +143,6 @@ resource "aws_s3_bucket" "versioning_bucket" {
   bucket = "my-versioning-bucket"
   acl    = "private"
 
-  versioning {
-    enabled = true
-  }
-
   lifecycle_rule {
     prefix  = "config/"
     enabled = true
@@ -172,6 +160,13 @@ resource "aws_s3_bucket" "versioning_bucket" {
     noncurrent_version_expiration {
       days = 90
     }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "versioning" {
+  bucket = aws_s3_bucket.versioning_bucket.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 ```
@@ -259,9 +254,12 @@ resource "aws_iam_role_policy_attachment" "replication" {
 
 resource "aws_s3_bucket" "destination" {
   bucket = "tf-test-bucket-destination-12345"
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_versioning" "destination" {
+  bucket = aws_s3_bucket.destination.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
@@ -269,34 +267,44 @@ resource "aws_s3_bucket" "source" {
   provider = aws.central
   bucket   = "tf-test-bucket-source-12345"
   acl      = "private"
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_versioning" "source" {
+  bucket = aws_s3_bucket.source.id
+  versioning_configuration {
+    status = "Enabled"
   }
+}
 
-  replication_configuration {
-    role = aws_iam_role.replication.arn
+resource "aws_s3_bucket_replication_configuration" "source" {
+  # Must have bucket versioning enabled first
+  depends_on = [
+    aws_s3_bucket_versioning.source,
+    aws_s3_bucket_versioning.destination,
+  ]
 
-    rules {
-      id     = "foobar"
-      status = "Enabled"
+  bucket = aws_s3_bucket.source.id
+  role   = aws_iam_role.replication.arn
 
-      filter {
-        tags = {}
+  rule {
+    id     = "foobar"
+    status = "Enabled"
+
+    filter {
+      tags = {}
+    }
+    destination {
+      bucket        = aws_s3_bucket.destination.arn
+      storage_class = "STANDARD"
+
+      replication_time {
+        status  = "Enabled"
+        minutes = 15
       }
-      destination {
-        bucket        = aws_s3_bucket.destination.arn
-        storage_class = "STANDARD"
 
-        replication_time {
-          status  = "Enabled"
-          minutes = 15
-        }
-
-        metrics {
-          status  = "Enabled"
-          minutes = 15
-        }
+      metrics {
+        status  = "Enabled"
+        minutes = 15
       }
     }
   }
@@ -361,7 +369,6 @@ The following arguments are supported:
 * `force_destroy` - (Optional, Default:`false`) A boolean that indicates all objects (including any [locked objects](https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lock-overview.html)) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are *not* recoverable.
 * `website` - (Optional) A website object (documented below).
 * `cors_rule` - (Optional) A rule of [Cross-Origin Resource Sharing](https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html) (documented below).
-* `versioning` - (Optional) A state of [versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) (documented below)
 * `logging` - (Optional) A settings of [bucket logging](https://docs.aws.amazon.com/AmazonS3/latest/UG/ManagingBucketLogging.html) (documented below).
 * `lifecycle_rule` - (Optional) A configuration of [object lifecycle management](http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html) (documented below).
 * `acceleration_status` - (Optional) Sets the accelerate configuration of an existing bucket. Can be `Enabled` or `Suspended`.
@@ -390,11 +397,6 @@ The `CORS` object supports the following:
 * `allowed_origins` (Required) Specifies which origins are allowed.
 * `expose_headers` (Optional) Specifies expose header in the response.
 * `max_age_seconds` (Optional) Specifies time in seconds that browser can cache the response for a preflight request.
-
-The `versioning` object supports the following:
-
-* `enabled` - (Optional) Enable versioning. Once you version-enable a bucket, it can never return to an unversioned state. You can, however, suspend versioning on that bucket.
-* `mfa_delete` - (Optional) Enable MFA delete for either `Change the versioning state of your bucket` or `Permanently delete an object version`. Default is `false`. This cannot be used to toggle this setting but is available to allow managed buckets to reflect the state in AWS
 
 The `logging` object supports the following:
 
@@ -561,6 +563,9 @@ In addition to all arguments above, the following attributes are exported:
 * `hosted_zone_id` - The [Route 53 Hosted Zone ID](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_website_region_endpoints) for this bucket's region.
 * `region` - The AWS region this bucket resides in.
 * `tags_all` - A map of tags assigned to the resource, including those inherited from the provider [`default_tags` configuration block](/docs/providers/aws/index.html#default_tags-configuration-block).
+* `versioning` - The [versioning](https://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html) state of the bucket.
+    * `enabled` - Whether versioning is enabled.
+    * `mfa_delete` - Whether MFA delete is enabled.
 * `website_endpoint` - The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.
 * `website_domain` - The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records.
 
