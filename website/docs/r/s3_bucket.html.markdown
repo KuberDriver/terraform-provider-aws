@@ -305,25 +305,8 @@ resource "aws_s3_bucket" "source" {
 
 ### Enable Default Server Side Encryption
 
-```terraform
-resource "aws_kms_key" "mykey" {
-  description             = "This key is used to encrypt objects"
-  deletion_window_in_days = 10
-}
-
-resource "aws_s3_bucket" "mybucket" {
-  bucket = "mybucket"
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.mykey.arn
-        sse_algorithm     = "aws:kms"
-      }
-    }
-  }
-}
-```
+The `server_side_encryption_configuration` argument is read-only as of version 4.0.
+See the [`aws_s3_bucket_server_side_encryption_configuration` resource](s3_bucket_server_side_encryption_configuration.html.markdown) for configuration details.
 
 ### Using ACL policy grants
 
@@ -370,7 +353,6 @@ Can be either `BucketOwner` or `Requester`. By default, the owner of the S3 buck
 the costs of any data transfer. See [Requester Pays Buckets](http://docs.aws.amazon.com/AmazonS3/latest/dev/RequesterPaysBuckets.html)
 developer guide for more information.
 * `replication_configuration` - (Optional) A configuration of [replication configuration](http://docs.aws.amazon.com/AmazonS3/latest/dev/crr.html) (documented below).
-* `server_side_encryption_configuration` - (Optional) A configuration of [server-side encryption configuration](http://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-encryption.html) (documented below)
 * `object_lock_configuration` - (Optional) A configuration of [S3 object locking](https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lock.html) (documented below)
 
 ~> **NOTE:** You cannot use `acceleration_status` in `cn-north-1` or `us-gov-west-1`
@@ -504,20 +486,6 @@ The `filter` object supports the following:
 * `tags` - (Optional)  A map of tags that identifies subset of objects to which the rule applies.
 The rule applies only to objects having all the tags in its tagset.
 
-The `server_side_encryption_configuration` object supports the following:
-
-* `rule` - (required) A single object for server-side encryption by default configuration. (documented below)
-
-The `rule` object supports the following:
-
-* `apply_server_side_encryption_by_default` - (required) A single object for setting server-side encryption by default. (documented below)
-* `bucket_key_enabled` - (Optional) Whether or not to use [Amazon S3 Bucket Keys](https://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-key.html) for SSE-KMS.
-
-The `apply_server_side_encryption_by_default` object supports the following:
-
-* `sse_algorithm` - (required) The server-side encryption algorithm to use. Valid values are `AES256` and `aws:kms`
-* `kms_master_key_id` - (optional) The AWS KMS master key ID used for the SSE-KMS encryption. This can only be used when you set the value of `sse_algorithm` as `aws:kms`. The default `aws/s3` AWS KMS master key is used if this element is absent while the `sse_algorithm` is `aws:kms`.
-
 The `grant` object supports the following:
 
 * `id` - (optional) Canonical user id to grant for. Used only when `type` is `CanonicalUser`.
@@ -560,6 +528,12 @@ In addition to all arguments above, the following attributes are exported:
 * `bucket_regional_domain_name` - The bucket region-specific domain name. The bucket domain name including the region name, please refer [here](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent [redirect issues](https://forums.aws.amazon.com/thread.jspa?threadID=216814) from CloudFront to S3 Origin URL.
 * `hosted_zone_id` - The [Route 53 Hosted Zone ID](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_website_region_endpoints) for this bucket's region.
 * `region` - The AWS region this bucket resides in.
+* `server_side_encryption_configuration` - The [server-side encryption configuration](http://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-encryption.html).
+    * `rule` - (required) Information about a particular server-side encryption configuration rule.
+        * `apply_server_side_encryption_by_default` - The default server-side encryption applied to new objects in the bucket.
+            * `kms_master_key_id` - (optional) The AWS KMS master key ID used for the SSE-KMS encryption.
+            * `sse_algorithm` - (required) The server-side encryption algorithm used.
+        * `bucket_key_enabled` - (Optional) Whether an [Amazon S3 Bucket Key](https://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-key.html) is used for SSE-KMS.
 * `tags_all` - A map of tags assigned to the resource, including those inherited from the provider [`default_tags` configuration block](/docs/providers/aws/index.html#default_tags-configuration-block).
 * `website_endpoint` - The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.
 * `website_domain` - The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records.
