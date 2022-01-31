@@ -316,6 +316,11 @@ resource "aws_s3_bucket" "mybucket" {
 }
 ```
 
+### Using ACL policy grants
+
+The `acl` and `grant` arguments are read-only as of version 4.0.
+See the [`aws_s3_bucket_acl` resource](s3_bucket_acl.html.markdown) for configuration details.
+
 ## Argument Reference
 
 The following arguments are supported:
