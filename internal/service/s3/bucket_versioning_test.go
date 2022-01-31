@@ -16,6 +16,9 @@ import (
 )
 
 func TestAccS3BucketVersioning_basic(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	resourceName := "aws_s3_bucket_versioning.test"
 
@@ -44,6 +47,9 @@ func TestAccS3BucketVersioning_basic(t *testing.T) {
 }
 
 func TestAccS3BucketVersioning_disappears(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	resourceName := "aws_s3_bucket_versioning.test"
 
@@ -66,6 +72,9 @@ func TestAccS3BucketVersioning_disappears(t *testing.T) {
 }
 
 func TestAccS3BucketVersioning_update(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	resourceName := "aws_s3_bucket_versioning.test"
 
@@ -107,6 +116,9 @@ func TestAccS3BucketVersioning_update(t *testing.T) {
 // TestAccBucketVersioning_MFADelete can only test for a "Disabled"
 // mfa_delete configuration as the "mfa" argument is required if it's enabled
 func TestAccS3BucketVersioning_MFADelete(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	resourceName := "aws_s3_bucket_versioning.test"
 

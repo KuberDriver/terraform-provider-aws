@@ -19,7 +19,6 @@ Provides a S3 bucket resource.
 ```terraform
 resource "aws_s3_bucket" "b" {
   bucket = "my-tf-test-bucket"
-  acl    = "private"
 
   tags = {
     Name        = "My bucket"
@@ -33,7 +32,6 @@ resource "aws_s3_bucket" "b" {
 ```terraform
 resource "aws_s3_bucket" "b" {
   bucket = "s3-website-test.hashicorp.com"
-  acl    = "public-read"
   policy = file("policy.json")
 
   website {
@@ -59,7 +57,6 @@ EOF
 ```terraform
 resource "aws_s3_bucket" "b" {
   bucket = "s3-website-test.hashicorp.com"
-  acl    = "public-read"
 
   cors_rule {
     allowed_headers = ["*"]
@@ -76,7 +73,6 @@ resource "aws_s3_bucket" "b" {
 ```terraform
 resource "aws_s3_bucket" "b" {
   bucket = "my-tf-test-bucket"
-  acl    = "private"
 
   versioning {
     enabled = true
@@ -89,12 +85,10 @@ resource "aws_s3_bucket" "b" {
 ```terraform
 resource "aws_s3_bucket" "log_bucket" {
   bucket = "my-tf-log-bucket"
-  acl    = "log-delivery-write"
 }
 
 resource "aws_s3_bucket" "b" {
   bucket = "my-tf-test-bucket"
-  acl    = "private"
 
   logging {
     target_bucket = aws_s3_bucket.log_bucket.id
@@ -108,7 +102,6 @@ resource "aws_s3_bucket" "b" {
 ```terraform
 resource "aws_s3_bucket" "bucket" {
   bucket = "my-bucket"
-  acl    = "private"
 
   lifecycle_rule {
     id      = "log"
@@ -149,7 +142,6 @@ resource "aws_s3_bucket" "bucket" {
 
 resource "aws_s3_bucket" "versioning_bucket" {
   bucket = "my-versioning-bucket"
-  acl    = "private"
 
   versioning {
     enabled = true
@@ -268,7 +260,6 @@ resource "aws_s3_bucket" "destination" {
 resource "aws_s3_bucket" "source" {
   provider = aws.central
   bucket   = "tf-test-bucket-source-12345"
-  acl      = "private"
 
   versioning {
     enabled = true
@@ -325,36 +316,12 @@ resource "aws_s3_bucket" "mybucket" {
 }
 ```
 
-### Using ACL policy grants
-
-```terraform
-data "aws_canonical_user_id" "current_user" {}
-
-resource "aws_s3_bucket" "bucket" {
-  bucket = "mybucket"
-
-  grant {
-    id          = data.aws_canonical_user_id.current_user.id
-    type        = "CanonicalUser"
-    permissions = ["FULL_CONTROL"]
-  }
-
-  grant {
-    type        = "Group"
-    permissions = ["READ_ACP", "WRITE"]
-    uri         = "http://acs.amazonaws.com/groups/s3/LogDelivery"
-  }
-}
-```
-
 ## Argument Reference
 
 The following arguments are supported:
 
 * `bucket` - (Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name. Must be lowercase and less than or equal to 63 characters in length. A full list of bucket naming rules [may be found here](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html).
 * `bucket_prefix` - (Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with `bucket`. Must be lowercase and less than or equal to 37 characters in length. A full list of bucket naming rules [may be found here](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html).
-* `acl` - (Optional) The [canned ACL](https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl) to apply. Valid values are `private`, `public-read`, `public-read-write`, `aws-exec-read`, `authenticated-read`, and `log-delivery-write`. Defaults to `private`.  Conflicts with `grant`.
-* `grant` - (Optional) An [ACL policy grant](https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#sample-acl) (documented below). Conflicts with `acl`.
 * `policy` - (Optional) A valid [bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html) JSON document. Note that if the policy document is not specific enough (but still valid), Terraform may view the policy as constantly changing in a `terraform plan`. In this case, please make sure you use the verbose/specific version of the policy. For more information about building AWS IAM policy documents with Terraform, see the [AWS IAM Policy Document Guide](https://learn.hashicorp.com/terraform/aws/iam-policy).
 
 * `tags` - (Optional) A map of tags to assign to the bucket. If configured with a provider [`default_tags` configuration block](/docs/providers/aws/index.html#default_tags-configuration-block) present, tags with matching keys will overwrite those defined at the provider-level.
@@ -518,13 +485,6 @@ The `apply_server_side_encryption_by_default` object supports the following:
 * `sse_algorithm` - (required) The server-side encryption algorithm to use. Valid values are `AES256` and `aws:kms`
 * `kms_master_key_id` - (optional) The AWS KMS master key ID used for the SSE-KMS encryption. This can only be used when you set the value of `sse_algorithm` as `aws:kms`. The default `aws/s3` AWS KMS master key is used if this element is absent while the `sse_algorithm` is `aws:kms`.
 
-The `grant` object supports the following:
-
-* `id` - (optional) Canonical user id to grant for. Used only when `type` is `CanonicalUser`.
-* `type` - (required) - Type of grantee to apply for. Valid values are `CanonicalUser` and `Group`. `AmazonCustomerByEmail` is not supported.
-* `permissions` - (required) List of permissions to apply for grantee. Valid values are `READ`, `WRITE`, `READ_ACP`, `WRITE_ACP`, `FULL_CONTROL`.
-* `uri` - (optional) Uri address to grant for. Used only when `type` is `Group`.
-
 The `access_control_translation` object supports the following:
 
 * `owner` - (Required) The override value for the owner on replicated objects. Currently only `Destination` is supported.
@@ -555,9 +515,15 @@ Once you create a bucket with S3 Object Lock enabled, you can't disable Object L
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - The name of the bucket.
+* `acl` - The [canned ACL](https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl) applied to the bucket.
 * `arn` - The ARN of the bucket. Will be of format `arn:aws:s3:::bucketname`.
 * `bucket_domain_name` - The bucket domain name. Will be of format `bucketname.s3.amazonaws.com`.
 * `bucket_regional_domain_name` - The bucket region-specific domain name. The bucket domain name including the region name, please refer [here](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region) for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent [redirect issues](https://forums.aws.amazon.com/thread.jspa?threadID=216814) from CloudFront to S3 Origin URL.
+* `grant` - The set of [ACL policy grants](https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#sample-acl).
+    * `id` - Canonical user id of the grantee.
+    * `type` - Type of grantee.
+    * `permissions` - List of permissions given to the grantee.
+    * `uri` - URI of the grantee group.
 * `hosted_zone_id` - The [Route 53 Hosted Zone ID](https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_website_region_endpoints) for this bucket's region.
 * `region` - The AWS region this bucket resides in.
 * `tags_all` - A map of tags assigned to the resource, including those inherited from the provider [`default_tags` configuration block](/docs/providers/aws/index.html#default_tags-configuration-block).

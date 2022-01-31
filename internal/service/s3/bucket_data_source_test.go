@@ -38,6 +38,9 @@ func TestAccS3BucketDataSource_basic(t *testing.T) {
 }
 
 func TestAccS3BucketDataSource_website(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	bucketName := sdkacctest.RandomWithPrefix("tf-test-bucket")
 	region := acctest.Region()
 

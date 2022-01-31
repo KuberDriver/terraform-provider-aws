@@ -616,6 +616,9 @@ func TestAccS3BucketReplicationConfiguration_schemaV2(t *testing.T) {
 }
 
 func TestAccS3BucketReplicationConfiguration_schemaV2SameRegion(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	rName := sdkacctest.RandomWithPrefix("tf-acc-test")
 	rNameDestination := sdkacctest.RandomWithPrefix("tf-acc-test")
 	dstBucketResourceName := "aws_s3_bucket.destination"
@@ -697,6 +700,7 @@ func TestAccS3BucketReplicationConfiguration_schemaV2DestinationMetrics(t *testi
 }
 
 func TestAccS3BucketReplicationConfiguration_existingObjectReplication(t *testing.T) {
+	// TODO: update test configuration once aws_s3_bucket_acl resource is available in the provider
 	t.Skipf("skipping test: AWS Technical Support request required to allow ExistingObjectReplication")
 
 	resourceName := "aws_s3_bucket_replication_configuration.test"
