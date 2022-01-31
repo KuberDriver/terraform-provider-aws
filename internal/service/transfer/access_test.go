@@ -15,6 +15,9 @@ import (
 )
 
 func testAccAccess_s3_basic(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf transfer.DescribedAccess
 	resourceName := "aws_transfer_access.test"
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
@@ -106,6 +109,9 @@ func testAccAccess_efs_basic(t *testing.T) {
 }
 
 func testAccAccess_disappears(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf transfer.DescribedAccess
 	resourceName := "aws_transfer_access.test"
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
@@ -134,6 +140,9 @@ func testAccAccess_disappears(t *testing.T) {
 }
 
 func testAccAccess_s3_policy(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf transfer.DescribedAccess
 	resourceName := "aws_transfer_access.test"
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)

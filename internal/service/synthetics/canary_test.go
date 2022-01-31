@@ -20,6 +20,9 @@ import (
 )
 
 func TestAccSyntheticsCanary_basic(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf1, conf2 synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -94,6 +97,9 @@ func TestAccSyntheticsCanary_basic(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_artifactEncryption(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -134,6 +140,9 @@ func TestAccSyntheticsCanary_artifactEncryption(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_runtimeVersion(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf1 synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -169,6 +178,9 @@ func TestAccSyntheticsCanary_runtimeVersion(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_startCanary(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf1, conf2, conf3 synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -217,6 +229,9 @@ func TestAccSyntheticsCanary_startCanary(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_StartCanary_codeChanges(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf1, conf2 synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -258,6 +273,9 @@ func TestAccSyntheticsCanary_StartCanary_codeChanges(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_s3(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -302,6 +320,9 @@ func TestAccSyntheticsCanary_s3(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_run(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -348,6 +369,9 @@ func TestAccSyntheticsCanary_run(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_runTracing(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -390,6 +414,9 @@ func TestAccSyntheticsCanary_runTracing(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_vpc(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -439,6 +466,9 @@ func TestAccSyntheticsCanary_vpc(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_tags(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"
@@ -485,6 +515,9 @@ func TestAccSyntheticsCanary_tags(t *testing.T) {
 }
 
 func TestAccSyntheticsCanary_disappears(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var conf synthetics.Canary
 	rName := fmt.Sprintf("tf-acc-test-%s", sdkacctest.RandString(8))
 	resourceName := "aws_synthetics_canary.test"

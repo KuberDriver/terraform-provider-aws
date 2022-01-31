@@ -152,6 +152,9 @@ func testAccConformancePack_inputParameters(t *testing.T) {
 }
 
 func testAccConformancePack_S3Delivery(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var pack configservice.ConformancePackDetail
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	resourceName := "aws_config_conformance_pack.test"
@@ -184,6 +187,9 @@ func testAccConformancePack_S3Delivery(t *testing.T) {
 }
 
 func testAccConformancePack_S3Template(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var pack configservice.ConformancePackDetail
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	resourceName := "aws_config_conformance_pack.test"
@@ -265,6 +271,9 @@ func testAccConformancePack_updateInputParameters(t *testing.T) {
 }
 
 func testAccConformancePack_updateS3Delivery(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var pack configservice.ConformancePackDetail
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	bucketName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
@@ -304,6 +313,9 @@ func testAccConformancePack_updateS3Delivery(t *testing.T) {
 }
 
 func testAccConformancePack_updateS3Template(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var pack configservice.ConformancePackDetail
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	bucketName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
@@ -383,6 +395,9 @@ func testAccConformancePack_updateTemplateBody(t *testing.T) {
 }
 
 func testAccConformancePack_S3TemplateAndTemplateBody(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	var pack configservice.ConformancePackDetail
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)
 	resourceName := "aws_config_conformance_pack.test"

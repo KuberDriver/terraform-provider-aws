@@ -10,6 +10,9 @@ import (
 )
 
 func TestAccServiceCatalogConstraintDataSource_basic(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	resourceName := "aws_servicecatalog_constraint.test"
 	dataSourceName := "data.aws_servicecatalog_constraint.test"
 	rName := sdkacctest.RandomWithPrefix(acctest.ResourcePrefix)

@@ -19,6 +19,9 @@ import (
 )
 
 func TestAccFSxDataRepositoryAssociation_basic(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -58,6 +61,9 @@ func TestAccFSxDataRepositoryAssociation_basic(t *testing.T) {
 }
 
 func TestAccFSxDataRepositoryAssociation_disappears(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -202,6 +208,9 @@ func TestAccFSxDataRepositoryAssociation_dataRepositoryPathUpdated(t *testing.T)
 
 //lintignore:AT002
 func TestAccFSxDataRepositoryAssociation_importedFileChunkSize(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -236,6 +245,9 @@ func TestAccFSxDataRepositoryAssociation_importedFileChunkSize(t *testing.T) {
 
 //lintignore:AT002
 func TestAccFSxDataRepositoryAssociation_importedFileChunkSizeUpdated(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
