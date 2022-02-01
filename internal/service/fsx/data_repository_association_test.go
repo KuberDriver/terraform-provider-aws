@@ -92,6 +92,9 @@ func TestAccFSxDataRepositoryAssociation_disappears(t *testing.T) {
 }
 
 func TestAccFSxDataRepositoryAssociation_disappears_ParentFileSystem(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -121,6 +124,9 @@ func TestAccFSxDataRepositoryAssociation_disappears_ParentFileSystem(t *testing.
 }
 
 func TestAccFSxDataRepositoryAssociation_fileSystemPathUpdated(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -163,6 +169,9 @@ func TestAccFSxDataRepositoryAssociation_fileSystemPathUpdated(t *testing.T) {
 }
 
 func TestAccFSxDataRepositoryAssociation_dataRepositoryPathUpdated(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -289,6 +298,9 @@ func TestAccFSxDataRepositoryAssociation_importedFileChunkSizeUpdated(t *testing
 }
 
 func TestAccFSxDataRepositoryAssociation_deleteDataInFilesystem(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -322,6 +334,9 @@ func TestAccFSxDataRepositoryAssociation_deleteDataInFilesystem(t *testing.T) {
 }
 
 func TestAccFSxDataRepositoryAssociation_s3AutoExportPolicy(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -358,6 +373,9 @@ func TestAccFSxDataRepositoryAssociation_s3AutoExportPolicy(t *testing.T) {
 }
 
 func TestAccFSxDataRepositoryAssociation_s3AutoExportPolicyUpdate(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -403,6 +421,9 @@ func TestAccFSxDataRepositoryAssociation_s3AutoExportPolicyUpdate(t *testing.T) 
 }
 
 func TestAccFSxDataRepositoryAssociation_s3AutoImportPolicy(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -439,6 +460,9 @@ func TestAccFSxDataRepositoryAssociation_s3AutoImportPolicy(t *testing.T) {
 }
 
 func TestAccFSxDataRepositoryAssociation_s3AutoImportPolicyUpdate(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
@@ -484,6 +508,9 @@ func TestAccFSxDataRepositoryAssociation_s3AutoImportPolicyUpdate(t *testing.T) 
 }
 
 func TestAccFSxDataRepositoryAssociation_s3FullPolicy(t *testing.T) {
+	// TODO: remove skip once aws_s3_bucket_acl resource is available in the provider
+	t.Skipf("skipping acceptance testing: aws_s3_bucket 'acl' and 'grant' are read-only, migrate configuration to aws_s3_bucket_acl")
+
 	if acctest.Partition() == endpoints.AwsUsGovPartitionID {
 		t.Skip("PERSISTENT_2 deployment_type is not supported in GovCloud partition")
 	}
