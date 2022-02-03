@@ -19,7 +19,7 @@ builds:
       - darwin
       - freebsd
       - linux
-      - android
+      - android # check in ci if android builds
       - windows
     ignore:
       - goarch: '386'
