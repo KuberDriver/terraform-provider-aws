@@ -19,6 +19,7 @@ builds:
       - darwin
       - freebsd
       - linux
+      - android
       - windows
     ignore:
       - goarch: '386'
