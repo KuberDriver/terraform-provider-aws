@@ -86,7 +86,7 @@ resource "aws_s3_bucket" "b" {
 
 ### Enable Logging
 
-The `logging` argument is read-only as of version 4.0.
+The `logging` argument is read-only as of version 4.0 of the Terraform AWS Provider.
 See the [`aws_s3_bucket_logging` resource](s3_bucket_logging.html.markdown) for configuration details.
 
 ### Using object lifecycle
