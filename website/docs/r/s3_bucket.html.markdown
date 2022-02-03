@@ -73,7 +73,7 @@ resource "aws_s3_bucket" "b" {
 
 ### Using versioning
 
-The `versioning` argument is read-only as of version 4.0.
+The `versioning` argument is read-only as of version 4.0 of the Terraform AWS Provider.
 See the [`aws_s3_bucket_versioning` resource](s3_bucket_versioning.html.markdown) for configuration details.
 
 ### Enable Logging
